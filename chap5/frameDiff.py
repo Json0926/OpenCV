@@ -12,6 +12,7 @@ Created on 2019/10/26 9:12 2019
 import cv2
 import datetime
 import time
+import numpy as np
 
 def frameDiff(video, save_path, video_time):
     cameraCapture = cv2.VideoCapture(video)
@@ -95,18 +96,84 @@ def detect_video(video, save_path):
 检测小球运动轨迹  帧差
 """
 def diff(video):
-    cameraCapture = cv2.VideoCapture(video)
-    ret, frame = cameraCapture
+    cap = cv2.VideoCapture(video)
+    ret, frame = cap.read()
+    print(frame.shape)
+    # Check if camera opened successfully
+    if (cap.isOpened() == False):
+        print("Error opening video stream or file")
 
+    fps = 25
+    size = (int(cap.get(cv2.CAP_PROP_FRAME_WIDTH)),
+            int(cap.get(cv2.CAP_PROP_FRAME_HEIGHT)))
+    videoCap = cv2.VideoWriter('cha.avi', cv2.VideoWriter_fourcc('X','V','I','D'), fps, (960, 544))
+
+
+    frameNum = 0
+    # Read until video is completed
+    while (cap.isOpened()):
+        # Capture frame-by-frame
+        ret, frame = cap.read()
+        frameNum += 1
+
+        if ret == True:
+
+            tempframe = frame
+            if (frameNum == 1):
+                previousframe = cv2.cvtColor(tempframe, cv2.COLOR_BGR2GRAY)
+                print(111)
+            if (frameNum >= 2):
+
+                currentframe = cv2.cvtColor(tempframe, cv2.COLOR_BGR2GRAY)
+                currentframe = cv2.absdiff(currentframe, previousframe)
+                median = cv2.medianBlur(currentframe, 3)
+                median = cv2.cvtColor(median, cv2.COLOR_GRAY2BGR)
+
+                # print('frame', frame, frame.shape)
+                # print('median', median, median.shape)
+                videoCap.write(median)
+
+                ret, threshold_frame = cv2.threshold(currentframe, 50, 255, cv2.THRESH_BINARY)
+                # zero = np.zeros(threshold_frame.shape, threshold_frame.dtype)
+                # print(dst.shape, dst.dtype)
+                gauss_image = cv2.GaussianBlur(threshold_frame, (3, 3), 0)
+
+                print('thres', threshold_frame, threshold_frame.shape)
+                threshold_frame = cv2.cvtColor(threshold_frame, cv2.COLOR_GRAY2BGR)
+                print(222)
+                # Display the resulting frame
+                # cv2.imshow('原图', frame)
+                # cv2.imshow('Frame', currentframe)
+                cv2.imshow('median', median)
+                # cv2.imshow('sum', dst)
+                cv2.imshow('thres', threshold_frame)
+
+                # cv2.imwrite("thres{}.jpg".format(frameNum), threshold_frame)
+
+                # Press Q on keyboard to  exit
+                if cv2.waitKey(33) & 0xFF == ord('q'):
+                    break
+            previousframe = cv2.cvtColor(tempframe, cv2.COLOR_BGR2GRAY)
+        # Break the loop
+
+        else:
+            break
+
+    # When everything done, release the video capture object
+    cap.release()
+
+    # Closes all the frames
+    cv2.destroyAllWindows()
 
 
 
 
 if __name__ == '__main__':
-    video_path = '../data/video/1026.mp4'
+    video_path = '../data/video/科技炫酷视频.mp4'
     save_path = '../data/video/'
     # frameDiff(video_path, save_path, 60)
-    detect_video(video_path, save_path)
+    # detect_video(video_path, save_path)
+    diff(video_path)
 
 
 

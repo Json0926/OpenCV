@@ -5,20 +5,33 @@
 
 import numpy as np
 import cv2
+import pandas as pd
+import time
 
-cap = cv2.VideoCapture(0)
+video = '../data/video/G10301505.mp4'
+time.sleep(1)
+print(1)
 
-while(True):
+cap = cv2.VideoCapture(video)
+a = cap.get(5)
+print('aa',a)
+print(2)
+ret, frame = cap.read()
+if(cap.isOpened() == False):
+    print('opening videl file')
+fps = 10
+size = (int(cap.get(cv2.CAP_PROP_FRAME_HEIGHT)),
+        int(cap.get(cv2.CAP_PROP_FRAME_WIDTH)))
+videoCap = cv2.VideoWriter('ma.avi', cv2.VideoWriter_fourcc('X','V','I','D'), fps, size)
+ret, frame = cap.read()
+# cv2.imshow('frame', frame)
+while (cap.isOpened()):
+    # videoCap.write(frame)
     ret, frame = cap.read()
-
-    gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
-
-    cv2.imshow('frame', gray)
-    if cv2.waitKey(1) & 0xFF == ord('q'):
-        break
+    videoCap.write(frame)
 
 cap.release()
-cv2.destroyAllWindows()
+
 
 
 

@@ -10,8 +10,8 @@ import numpy as np
 import cv2
 from matplotlib import pyplot as plt
 
-queryImage = cv2.imread('../img/img4.png', 0)
-trainingImage = cv2.imread('../img/chess_board.jpeg', 0)
+queryImage = cv2.imread('../img/EXC_point1_1374179.jpg', 0)
+trainingImage = cv2.imread('../img/EXC_point1_1375043.jpg', 0)
 
 # create SIFT and detect/compute
 sift = cv2.xfeatures2d.SIFT_create()

@@ -14,7 +14,7 @@ import numpy as np
 
 
 def main(argv):
-    default_file = './data/color/EXC_point1_1374179.jpg'
+    default_file = '../img/coin.jpg'
     filename = argv[0] if len(argv) > 0 else default_file
     # Loads an image
     # src = cv.imread(cv.samples.findFile(filename), cv.IMREAD_COLOR)
@@ -39,9 +39,9 @@ def main(argv):
     # canny边缘检测去噪
     edges = cv.Canny(gray, 100, 200)
 
-    circles = cv.HoughCircles(edges, cv.HOUGH_GRADIENT, 1, 10,
-                              param1=4, param2=15,
-                              minRadius=5, maxRadius=10)
+    circles = cv.HoughCircles(edges, cv.HOUGH_GRADIENT, 1, 40,
+                              param1=3, param2=28,
+                              minRadius=25, maxRadius=50)
 
     if circles is not None:
         circles = np.uint16(np.around(circles))
