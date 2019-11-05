@@ -169,7 +169,7 @@ def diff(video):
 
 
 if __name__ == '__main__':
-    video_path = '../data/video/科技炫酷视频.mp4'
+    video_path = '../data/video/1026.mp4'
     save_path = '../data/video/'
     # frameDiff(video_path, save_path, 60)
     # detect_video(video_path, save_path)
